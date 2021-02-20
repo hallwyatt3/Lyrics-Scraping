@@ -3,13 +3,10 @@ from bs4 import BeautifulSoup
 import re
 from bad_words import get_bw
 
-def produce_url():
-    #this function accepts input for an artist and a song and then outputs a url that will go
-    #into the az = requests.get(url)
 
-    #accept input
-    artist = input("What is the artist of the song? ")
-    song = input("What is the song title? ")
+def produce_url(artist, song):
+    #this function takes inputted artist and song name and outputs a url to go
+    #into the az = requests.get(url)
 
     #make sure to get rid of any spaces between names (Kanye West)
 
@@ -20,13 +17,23 @@ def produce_url():
             new_name += i.lower()
         return new_name
 
+    def no_periods(name):
+        name = name.split('.')
+        new_name = ''
+        for i in name:
+            new_name += i.lower()
+        return new_name
+
     artist = no_spaces(artist)
+    artist = no_periods(artist)
     song = no_spaces(song)
+    song = no_periods(song)
 
     #further considerations:
     # apostrophes
     # ampersands
     # misspellings
+    # when a period is in the song name, it is removed in the url
 
     return f'https://www.azlyrics.com/lyrics/{artist}/{song}.html'
 
@@ -76,10 +83,9 @@ def clean_lyrics(soup):
     final_list = []
     for i in lyrics_string:
         if i != '':
-            final_list.append(i)
+            final_list.append(i.lower())
 
     #IMPROVEMENTS:
-    #lowercase every word
     #get rid of parentheses
     #get rid of apostrophe problem with \\
 
@@ -101,20 +107,32 @@ def score_bw(bw_list):
     #probably just going to list the worst 10 swear words and give it a score of 10 and leave 
     #all the other swear words at a one
     really_bw = ['fuck', 'cunt', 'pussy', 'bitch', 'dick', 'fucker', 
-    'ass', 'ballsack', 'whore', 'nigga', 'nigger'
-    ]
+    'ass', 'ballsack', 'whore', 'nigga', 'nigger']
     count = 0
     for i in bw_list:
         if i in really_bw:
             count += 10
         else:
             count += 1
-    return count
+
+    #also want to consider the density of swear words. So like if it's a higher percentage of swear words
+    # in the song, then that should score higher. Maybe a multiplier?????
+    #alright here's a multiplier
+    def multiplier():
+        #number of words in the song
+        song_words = len(lyric_list)
+        #number of swear words
+        bw_words = len(list_bw)
+        return (bw_words/song_words)
+    
+    return count*multiplier()
 
 def main():
+    global lyric_list
+    global list_bw
     try:
         #this produces the url based on inputs and saves
-        lyric_url = produce_url()
+        lyric_url = produce_url(artist, song)
 
         #this fetches the url just produced and saves as soup
         soup = fetch_url(lyric_url)
@@ -132,5 +150,8 @@ def main():
     
     except:
         print('Couldn\'t find the song you wanted. Try again?')
+
+artist = 'lil wayne'
+song = 'Mr. Carter'
 
 main()
