@@ -152,6 +152,6 @@ def main():
         print('Couldn\'t find the song you wanted. Try again?')
 
 artist = 'lil wayne'
-song = 'Mr. Carter'
+song = 'Got Money'
 
 main()
