@@ -121,7 +121,6 @@ def main():
     try:
         #this produces the url based on inputs and saves
         lyric_url = produce_url(artist, song)
-        print(lyric_url)
 
         #this fetches the url just produced and saves as soup
         soup = fetch_url(lyric_url)
