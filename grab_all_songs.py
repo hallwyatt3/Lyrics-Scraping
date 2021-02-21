@@ -1,26 +1,17 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup as bs
 
 #the purpose of this code is to grab all the songs that are available for a given artist on az lyrics
 
 def produce_url(artist):
-    
-    def no_spaces(name):
-        name = name.split(' ')
-        new_name = ''
-        for i in name:
-            new_name += i.lower()
-        return new_name
 
-    def no_periods(name):
-        name = name.split('.')
-        new_name = ''
-        for i in name:
-            new_name += i.lower()
-        return new_name
+    def remove_special_chars(name):
+        name = re.sub(r'[^A-Za-z0-9]+', '', name)
+        return name.lower()
 
-    artist = no_spaces(artist)
-    artist = no_periods(artist)
+    artist = remove_special_chars(artist)
     return f'https://www.azlyrics.com/{artist[0]}/{artist}.html'
 
 def fetch_url(url):
@@ -31,7 +22,7 @@ def fetch_url(url):
 def get_song_list(soup):
     #this function takes the soup fetched by the fetch_url function and 
     # returns a list of songs by the artist
-
+    global all_songs_list
     songs = soup.find_all('a')
     songs = songs[33:-8]
     all_songs_list = []
@@ -41,6 +32,8 @@ def get_song_list(soup):
     return all_songs_list
 
 url = produce_url(input('What artist are we searching for today? '))
+soup = fetch_url(url)
+get_song_list(soup)
 print(url)
 
 
