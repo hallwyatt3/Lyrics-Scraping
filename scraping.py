@@ -10,24 +10,12 @@ def produce_url(artist, song):
 
     #make sure to get rid of any spaces between names (Kanye West)
 
-    def no_spaces(name):
-        name = name.split(' ')
-        new_name = ''
-        for i in name:
-            new_name += i.lower()
-        return new_name
+    def remove_special_chars(name):
+        name = re.sub(r'[^A-Za-z0-9]+', '', name)
+        return name.lower()
 
-    def no_periods(name):
-        name = name.split('.')
-        new_name = ''
-        for i in name:
-            new_name += i.lower()
-        return new_name
-
-    artist = no_spaces(artist)
-    artist = no_periods(artist)
-    song = no_spaces(song)
-    song = no_periods(song)
+    artist = remove_special_chars(artist)
+    song = remove_special_chars(song)
 
     #further considerations:
     # apostrophes
@@ -46,7 +34,7 @@ def fetch_url(link):
         print('Couldn\'t find the song. Try again')
 
 def clean_lyrics(soup):
-    #this function gets rid of html elements and empty spaces. 
+    #this function gets rid of html elements and empty spaces.
     # improvements: 1. get rid of parentheses 2. get rid of \ before apostrophe 3. lower case everything
 
     soup_text = str(soup)
@@ -58,7 +46,7 @@ def clean_lyrics(soup):
     b4mxm_str = str(b4mxm)
     soup_b4mxm = BeautifulSoup(b4mxm_str, 'html.parser')
 
-    
+
     #print(soup_b4mxm.prettify())
 
     ### IM GOING TO USE REGULAR EXPRESSIONS HERE WE GOOOOOOOOOOO
@@ -104,9 +92,9 @@ def find_bw(list_lyrics):
 
 def score_bw(bw_list):
     #this function scores each bad word on a scale of 1-10 for how offensive it is
-    #probably just going to list the worst 10 swear words and give it a score of 10 and leave 
+    #probably just going to list the worst 10 swear words and give it a score of 10 and leave
     #all the other swear words at a one
-    really_bw = ['fuck', 'cunt', 'pussy', 'bitch', 'dick', 'fucker', 
+    really_bw = ['fuck', 'cunt', 'pussy', 'bitch', 'dick', 'fucker',
     'ass', 'ballsack', 'whore', 'nigga', 'nigger']
     count = 0
     for i in bw_list:
@@ -124,7 +112,7 @@ def score_bw(bw_list):
         #number of swear words
         bw_words = len(list_bw)
         return (bw_words/song_words)
-    
+
     return count*multiplier()
 
 def main():
@@ -147,7 +135,7 @@ def main():
         print(f'The number of bad words in this song is {len(list_bw)}')
         print(f'Thus, this song scores a {score_bw(list_bw)}')
         print(list_bw)
-    
+
     except:
         print('Couldn\'t find the song you wanted. Try again?')
 
