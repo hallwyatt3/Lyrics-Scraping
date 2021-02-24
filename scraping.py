@@ -139,7 +139,7 @@ def main():
     except:
         print('Couldn\'t find the song you wanted. Try again?')
 
-artist = 'lil wayne'
-song = 'Got Money'
+artist = 'Frank Ocean'
+song = 'Whip Appeal'
 
 main()

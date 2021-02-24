@@ -1,0 +1,5 @@
+Moving forward I want to do these things:
+1. Grab all the songs from one artist and have it cycle through those songs and score each one. Then I want
+    to rank each song.
+2. Then iterate that for several artists, so maybe build a script that will scrape each artist from the website. 
+    then rank each artist
