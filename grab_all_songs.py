@@ -9,25 +9,24 @@ class getSongs:
     def __init__(self, artist):
         self.artist = artist
 
-    def produce_url(artist):
+    def produce_url(self):
 
         def remove_special_chars(name):
             name = re.sub(r'[^A-Za-z0-9]+', '', name)
             return name.lower()
 
-        artist = remove_special_chars(artist)
+        artist = remove_special_chars(self.artist)
         return f'https://www.azlyrics.com/{artist[0]}/{artist}.html'
 
-    def fetch_url(url):
-        az = requests.get(url)
+    def fetch_url(self):
+        az = requests.get(self.produce_url())
         soup = bs(az.text, 'html.parser')
         return soup
 
-    def get_song_list(soup):
+    def get_song_list(self):
         #this function takes the soup fetched by the fetch_url function and 
         # returns a list of songs by the artist
-        global all_songs_list
-        songs = soup.find_all('a')
+        songs = self.fetch_url().find_all('a')
         songs = songs[34:-8]
         all_songs_list = []
         for i in songs:
@@ -35,5 +34,5 @@ class getSongs:
 
         return all_songs_list
 
-print(all_songs_list)
-print(len(all_songs_list))
+gs = getSongs('frank ocean')
+gs.get_song_list()
