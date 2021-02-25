@@ -16,6 +16,10 @@ class getSongs:
             return name.lower()
 
         artist = remove_special_chars(self.artist)
+
+        # K i know this is terrible, but not sure why this is the only URL ive seen so far that's different
+        if artist == 'jackjohnson':
+            artist = 'johnson'
         return f'https://www.azlyrics.com/{artist[0]}/{artist}.html'
 
     def fetch_url(self):
